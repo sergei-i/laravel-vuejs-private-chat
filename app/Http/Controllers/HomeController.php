@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
+use App\User;
+use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class HomeController extends Controller
 {
@@ -19,10 +23,19 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return Renderable
      */
     public function index()
     {
         return view('home');
+    }
+
+    /**
+     * @return AnonymousResourceCollection
+     */
+    public function getFriends()
+    {
+        $users = User::where('id', '!=', auth()->id())->get();
+        return UserResource::collection($users);
     }
 }
